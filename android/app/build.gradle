@@ -77,15 +77,26 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.akalsawa"
+    namespace "com.akalsewa"
     defaultConfig {
-        applicationId "com.akalsawa"
+        applicationId "com.akalsewa"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
     }
     signingConfigs {
+
+        release { 
+
+            if (project.hasProperty('MYAPP_STORE_FILE')) {
+            storeFile file(project.property('MYAPP_STORE_FILE'))
+            storePassword project.property('MYAPP_STORE_PASSWORD')
+            keyAlias project.property('MYAPP_KEY_ALIAS')
+            keyPassword project.property('MYAPP_KEY_PASSWORD')
+            }
+        }
+
         debug {
             storeFile file('debug.keystore')
             storePassword 'android'
@@ -94,16 +105,17 @@ android {
         }
     }
     buildTypes {
+
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        
         debug {
             signingConfig signingConfigs.debug
         }
-        release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
-            minifyEnabled enableProguardInReleaseBuilds
-            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-        }
+         
     }
 }
 
